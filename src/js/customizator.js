@@ -6,6 +6,37 @@ export default class Customizator {
 		this.btnBlock.addEventListener('click', (e) => this.onScaleChange(e));
 	}
 
+	onScaleChange(e){
+		let scale;
+
+		const body = document.querySelector('body');
+		
+		if(e.target.value){
+			scale = +e.target.value.replace(/x/g, '');
+		}
+
+		function recursy(element){
+			[...element.childNodes].forEach(node => {
+				if(node.nodeName === '#text' && node.nodeValue.replace(/\s+/g,'').length > 0){
+
+					if(!node.parentNode.getAttribute('data-fz')){
+						let value = window.getComputedStyle(node.parentNode, null).fontSize;
+						node.parentNode.setAttribute('data-fz',+value.replace(/px/g,''))
+						node.parentNode.style.fontSize = node.parentNode.getAttribute('data-fz') * scale + 'px';
+					}
+					else{
+						node.parentNode.style.fontSize = node.parentNode.getAttribute('data-fz') * scale + 'px';
+					}
+ 
+				}
+				else{
+					recursy(node);
+				}
+			});
+		}
+		recursy(body);
+	}
+
 	render() {
 
 		let scaleInputS = document.createElement('input'),
@@ -17,8 +48,8 @@ export default class Customizator {
 		panel.classList.add('panel');
 		scaleInputS.classList.add('scale_btn');
 		scaleInputM.classList.add('scale_btn');
-		this.btnBlock.classList('scale');
-		this.colorPicker.classList('color');
+		this.btnBlock.classList.add('scale');
+		this.colorPicker.classList.add('color');
 
 		scaleInputS.setAttribute('type', 'button');
 		scaleInputM.setAttribute('type', 'button');
@@ -27,7 +58,7 @@ export default class Customizator {
 		this.colorPicker.setAttribute('type', 'color');
 		this.colorPicker.setAttribute('value', '#ffffff');
 
-		this.btnBlock.append(scaleInputS, scaleInputM);
+		this.btnBlock.append(scaleInputS, scaleInputM, this.colorPicker);
 
 
 		document.querySelector('body').append(panel);
