@@ -7,34 +7,78 @@ export default class Customizator {
 		this.colorPicker.addEventListener('input', (e) => this.onColorChange(e));
 	}
 
-	onColorChange(e){
+	addStyle() {
+		const style = document.createElement('style');
+		style.innerHTML = `
+			.panel {
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+				position: fixed;
+				top: 10px;
+				right: 0;
+				border: 1px solid rgba(0,0,0, .2);
+				box-shadow: 0 0 20px rgba(0,0,0, .5);
+				width: 300px;
+				height: 60px;
+				background-color: #fff;
+			
+			}
+			
+			.scale {
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+				width: 100px;
+				height: 40px;
+			}
+
+			.scale_btn {
+				display: block;
+				width: 40px;
+				height: 40px;
+				border: 1px solid rgba(0,0,0, .2);
+				border-radius: 4px;
+				font-size: 18px;
+			}
+			
+			.color {
+				width: 40px;
+				height: 40px;
+			}
+		`;
+
+		document.querySelector('head').appendChild(style);
+	}
+
+	onColorChange(e) {
 		const body = document.querySelector('body');
 		body.style.backgroundColor = e.target.value;
 	}
-	onScaleChange(e){
+	onScaleChange(e) {
 		let scale;
 
 		const body = document.querySelector('body');
-		
-		if(e.target.value){
+
+		if (e.target.value) {
 			scale = +e.target.value.replace(/x/g, '');
 		}
 
-		function recursy(element){
+		function recursy(element) {
 			[...element.childNodes].forEach(node => {
-				if(node.nodeName === '#text' && node.nodeValue.replace(/\s+/g,'').length > 0){
+				if (node.nodeName === '#text' && node.nodeValue.replace(/\s+/g, '').length > 0) {
 
-					if(!node.parentNode.getAttribute('data-fz')){
+					if (!node.parentNode.getAttribute('data-fz')) {
 						let value = window.getComputedStyle(node.parentNode, null).fontSize;
-						node.parentNode.setAttribute('data-fz',+value.replace(/px/g,''))
+						node.parentNode.setAttribute('data-fz', +value.replace(/px/g, ''))
 						node.parentNode.style.fontSize = node.parentNode.getAttribute('data-fz') * scale + 'px';
 					}
-					else{
+					else {
 						node.parentNode.style.fontSize = node.parentNode.getAttribute('data-fz') * scale + 'px';
 					}
- 
+
 				}
-				else{
+				else {
 					recursy(node);
 				}
 			});
@@ -48,7 +92,7 @@ export default class Customizator {
 			scaleInputM = document.createElement('input'),
 			panel = document.createElement('div');
 
-		panel.appendChild(this.btnBlock, this.colorPicker);
+		panel.append(this.btnBlock, this.colorPicker);
 
 		panel.classList.add('panel');
 		scaleInputS.classList.add('scale_btn');
@@ -63,9 +107,9 @@ export default class Customizator {
 		this.colorPicker.setAttribute('type', 'color');
 		this.colorPicker.setAttribute('value', '#ffffff');
 
-		this.btnBlock.append(scaleInputS, scaleInputM, this.colorPicker);
+		this.btnBlock.append(scaleInputS, scaleInputM);
 
-
+		this.addStyle();
 		document.querySelector('body').append(panel);
 	}
 }
