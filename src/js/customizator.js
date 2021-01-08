@@ -4,8 +4,13 @@ export default class Customizator {
 		this.colorPicker = document.createElement('input');
 
 		this.btnBlock.addEventListener('click', (e) => this.onScaleChange(e));
+		this.colorPicker.addEventListener('input', (e) => this.onColorChange(e));
 	}
 
+	onColorChange(e){
+		const body = document.querySelector('body');
+		body.style.backgroundColor = e.target.value;
+	}
 	onScaleChange(e){
 		let scale;
 
