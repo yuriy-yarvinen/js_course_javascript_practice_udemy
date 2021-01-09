@@ -41,3 +41,13 @@ function matrix(w,h){
 
 console.log(matrix(w,h));
 
+// Важно!!! Копирование объектов только через Object.assign({}, obj)
+const test = {
+	item: 5
+};
+
+let test2 = Object.assign({},test);
+
+test2.item = 10;
+console.log(test);
+console.log(test2);
