@@ -105,6 +105,7 @@ const plugins = () => {
     new CopyWebpackPlugin({
       patterns: [
         {
+          // from: path.resolve(__dirname, 'src/assets'),
           from: path.resolve(__dirname, 'src/assets'),
           to: path.resolve(__dirname, 'dist/assets')
         },
@@ -118,7 +119,7 @@ const plugins = () => {
   return base;
 };
 
-module.exports = {
+module.exports = [{
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
   entry: {
@@ -144,4 +145,52 @@ module.exports = {
     ]
   },
   plugins: plugins()
-};
+},
+{
+  context: path.resolve(__dirname, 'src2'),
+  mode: 'development',
+  entry: {
+    main: ['./js/main.js', './sass/style.scss']
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist2'),
+    filename: 'js/' + filename('js'),
+  },
+  optimization: optimization(),
+  devtool: isDev ? 'source-map' : false,
+  module: {
+    rules: [
+      {
+        test: /\.(scss|sass)$/,
+        use: cssLoaders('sass-loader')
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: jsLoader()
+      },
+    ]
+  },
+  plugins: plugins()
+}];
+
+new HtmlWebpackPlugin({
+  // template: './src/index.html',
+  filename: 'index.html',
+  template: './index.html',
+  chunks: ['main'],
+  minify: {
+    collapseWhitespace: isProd
+  },
+  cache: false
+}),
+new HtmlWebpackPlugin({
+  // template: './src/index.html',
+  filename: 'modules.html',
+  template: './modules.html',
+  chunks: ['modules'],
+  minify: {
+    collapseWhitespace: isProd
+  },
+  cache: false
+}),
