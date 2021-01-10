@@ -90,43 +90,71 @@ const jsLoader = () => {
   return loaders;
 };
 
-const plugins = () => {
-  const base = [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: './index.html',
-      chunks: ['main'],
-      minify: {
-        collapseWhitespace: isProd
-      },
-      cache: false
-    }),
+const plugins = name => {
+  const base = [];
+
+  if (name === 'course_3_oop_bringitup') {
+    base.push(
+      new HtmlWebpackPlugin({
+        filename: 'index.html',
+        template: './index.html',
+        chunks: ['main'],
+        minify: {
+          collapseWhitespace: isProd
+        },
+        cache: false
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'modules.html',
+        template: './modules.html',
+        chunks: ['modules'],
+        minify: {
+          collapseWhitespace: isProd
+        },
+        cache: false
+      })
+    );
+  }
+  else {
+    base.push(
+      new HtmlWebpackPlugin({
+        filename: 'index.html',
+        template: './index.html',
+        chunks: ['main'],
+        minify: {
+          collapseWhitespace: isProd
+        },
+        cache: false
+      })
+    );
+  }
+
+  base.push(
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {
           // from: path.resolve(__dirname, 'src/assets'),
-          from: path.resolve(__dirname, 'src/assets'),
-          to: path.resolve(__dirname, 'dist/assets')
+          from: path.resolve(__dirname, `${name}/assets`),
+          to: path.resolve(__dirname, `dist/${name}/assets`)
         },
       ]
     }),
     new MiniCssExtractPlugin({
       filename: 'css/' + filename('css')
     })
-  ];
-
+  );
   return base;
 };
 
 module.exports = [{
-  context: path.resolve(__dirname, 'src'),
+  context: path.resolve(__dirname, 'course_1_balkon'),
   mode: 'development',
   entry: {
-    main: ['./js/main.js', './scss/style.scss']
+    main: ['@babel/polyfill', './js/main.js']
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/course_1_balkon'),
     filename: 'js/' + filename('js'),
   },
   optimization: optimization(),
@@ -134,8 +162,8 @@ module.exports = [{
   module: {
     rules: [
       {
-        test: /\.(scss|sass)$/,
-        use: cssLoaders('sass-loader')
+        test: /\.css$/,
+        use: cssLoaders()
       },
       {
         test: /\.js$/,
@@ -144,16 +172,71 @@ module.exports = [{
       },
     ]
   },
-  plugins: plugins()
+  plugins: plugins('course_1_balkon')
 },
 {
-  context: path.resolve(__dirname, 'src2'),
+  context: path.resolve(__dirname, 'course_2_art'),
+  mode: 'development',
+  entry: {
+    main: ['@babel/polyfill', './js/main.js']
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist/course_2_art'),
+    filename: 'js/' + filename('js'),
+  },
+  optimization: optimization(),
+  devtool: isDev ? 'source-map' : false,
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: cssLoaders()
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: jsLoader()
+      },
+    ]
+  },
+  plugins: plugins('course_2_art')
+},
+{
+  context: path.resolve(__dirname, 'course_3_oop_bringitup'),
+  mode: 'development',
+  entry: {
+    main: ['./js/main.js'],
+    modules: ['./js/modules.js'],
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist/course_3_oop_bringitup'),
+    filename: 'js/' + filename('js'),
+  },
+  optimization: optimization(),
+  devtool: isDev ? 'source-map' : false,
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: cssLoaders()
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: jsLoader()
+      },
+    ]
+  },
+  plugins: plugins('course_3_oop_bringitup')
+},
+{
+  context: path.resolve(__dirname, 'course_4_lib'),
   mode: 'development',
   entry: {
     main: ['./js/main.js', './sass/style.scss']
   },
   output: {
-    path: path.resolve(__dirname, 'dist2'),
+    path: path.resolve(__dirname, 'dist/course_4_lib'),
     filename: 'js/' + filename('js'),
   },
   optimization: optimization(),
@@ -171,26 +254,34 @@ module.exports = [{
       },
     ]
   },
-  plugins: plugins()
-}];
+  plugins: plugins('course_4_lib')
+},
+{
+  context: path.resolve(__dirname, 'course_5_lib_oop'),
+  mode: 'development',
+  entry: {
+    main: ['./js/main.js', './scss/style.scss']
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist/course_5_lib_oop'),
+    filename: 'js/' + filename('js'),
+  },
+  optimization: optimization(),
+  devtool: isDev ? 'source-map' : false,
+  module: {
+    rules: [
+      {
+        test: /\.(scss|sass)$/,
+        use: cssLoaders('sass-loader')
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: jsLoader()
+      },
+    ]
+  },
+  plugins: plugins('course_5_lib_oop')
+}
+];
 
-new HtmlWebpackPlugin({
-  // template: './src/index.html',
-  filename: 'index.html',
-  template: './index.html',
-  chunks: ['main'],
-  minify: {
-    collapseWhitespace: isProd
-  },
-  cache: false
-}),
-new HtmlWebpackPlugin({
-  // template: './src/index.html',
-  filename: 'modules.html',
-  template: './modules.html',
-  chunks: ['modules'],
-  minify: {
-    collapseWhitespace: isProd
-  },
-  cache: false
-}),

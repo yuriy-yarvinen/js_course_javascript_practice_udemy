@@ -1,5 +1,5 @@
 {
-  "name": "library",
+  "name": "course_js",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,7 +16,9 @@
   "license": "ISC",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/runtime": "^7.12.5"
+    "@babel/runtime": "^7.12.5",
+    "jquery": "^3.5.1",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.7",
